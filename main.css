@@ -1,0 +1,18 @@
+#leftbox,
+#staging,
+#rightbox {
+	float: left;
+	margin-right: 50px;
+}
+
+
+#leftbox {
+	border: 1px solid teal;
+}
+#staging {
+	border: 1px solid orange;
+}
+#rightbox {
+	border: 1px solid purple;
+}
+
