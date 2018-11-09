@@ -5,6 +5,13 @@ var idCounter = 0
 var timer = 0
 var chaos = false
 
+minSpeed = 1.5
+maxSpeed = 2
+
+const slowDownStagingX = 200
+const slowDownRightboxX = 0
+const slowDownVX = 0.5
+
 var leftbox = document.getElementById('leftbox')
 var ctxLeftbox = leftbox.getContext('2d');
 var leftboxWidth = leftbox.width
@@ -37,29 +44,14 @@ const boxHeights = {
 setInterval(function () {
 	moveDots()
 	timer += 1
-	// console.log(Math.round(Math.random() * 2 - 1))
-}, 2)
+}, 10)
 
 function moveDots() {
 	dots1.forEach(dot => dot.move())
 	dots2.forEach(dot => dot.move())
 	dots3.forEach(dot => dot.move())
+
 	draw()
-}
-
-function drawLeftbox() {
-	ctx['leftbox'].clearRect(0, 0, boxWidths['leftbox'], boxHeights['leftbox']);
-	dots1.forEach(dot => dot.draw())
-}
-
-function drawStaging() {
-	ctx['staging'].clearRect(0, 0, boxWidths['staging'], boxHeights['staging']);
-	dots2.forEach(dot => dot.draw())
-}
-
-function drawRightbox() {
-	ctx['rightbox'].clearRect(0, 0, boxWidths['rightbox'], boxHeights['rightbox']);
-	dots3.forEach(dot => dot.draw())
 }
 
 function switchBox(dot) {
@@ -110,7 +102,8 @@ document.getElementById('add').addEventListener('click', () => {
 		box: 'leftbox',
 		x: Math.round(Math.random() * 20) * 10 + 5,
 		y: Math.round(Math.random() * 20) * 10 + 5,
-		vx: 1,
+		// vx: 0,
+		vxInit: Math.random() * (maxSpeed - minSpeed) + minSpeed,
 		radius: Math.round(Math.random() * 7) + 2,
 		color: 'teal',
 		draw: function () {
@@ -121,15 +114,30 @@ document.getElementById('add').addEventListener('click', () => {
 			ctx[this.box].fill()
 		},
 		move: function () {
-			this.x += this.vx
+			let vx = this.vx
+
+			if (this.box === 'staging') {
+				vx = (this.vx - slowDownVX) * Math.pow((this.x - slowDownStagingX) / slowDownStagingX, 2) + slowDownVX
+			}
+			else if (this.box === 'rightbox') {
+				vx = Math.min((this.vx - slowDownVX) * Math.pow((this.x - slowDownRightboxX) / 100, 2) + slowDownVX, this.vxInit)
+
+			}
+
+			this.x += vx
+
 			if (chaos) {
 				this.y += Math.round(Math.random() * 2 - 1)
 			}
 			if (this.x - this.radius >= boxWidths[this.box]) {
 				switchBox(this)
 			}
+		},
+		init: function () {
+			this.vx = this.vxInit
 		}
 	}
+	dot.init()
 	dots1.push(dot)
 	idCounter++
 	dot.draw()
@@ -152,4 +160,22 @@ function draw() {
 	drawLeftbox()
 	drawStaging()
 	drawRightbox()
+}
+
+function drawLeftbox() {
+	ctx['leftbox'].clearRect(0, 0, boxWidths['leftbox'], boxHeights['leftbox']);
+	dots1.forEach(dot => dot.draw())
+	document.getElementById('leftboxCounter').innerText = dots1.length
+}
+
+function drawStaging() {
+	ctx['staging'].clearRect(0, 0, boxWidths['staging'], boxHeights['staging']);
+	dots2.forEach(dot => dot.draw())
+	document.getElementById('stagingCounter').innerText = dots2.length
+}
+
+function drawRightbox() {
+	ctx['rightbox'].clearRect(0, 0, boxWidths['rightbox'], boxHeights['rightbox']);
+	dots3.forEach(dot => dot.draw())
+	document.getElementById('rightboxCounter').innerText = dots3.length
 }

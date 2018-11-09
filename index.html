@@ -11,15 +11,32 @@
 </head>
 
 <body>
-	<canvas id="leftbox" height=210 width=210></canvas>
-	<canvas id="staging" height=210 width=210></canvas>
-	<canvas id="rightbox" height=210 width=210></canvas>
+	<div id="control">
+		<button id="add">+</button>
+		<button id="remove">-</button>
+
+		<label for="chaos">chaos
+			<input type="checkbox" id='chaos' name='chaos' />
+		</label>
+	</div>
+	<div>
+		<h1>Area 1<span class="info" id="leftboxCounter"></span></h1>
+
+		<canvas id="leftbox" height=210 width=210></canvas>
+	</div>
+	<div>
+		<h1>Area 2<span class="info" id="stagingCounter"></span></h1>
+		<canvas id="staging" height=210 width=210></canvas>
+
+	</div>
+	<div>
+		<h1>Area 3<span class="info" id="rightboxCounter"></span></h1>
+		<canvas id="rightbox" height=210 width=210></canvas>
+
+	</div>
 
 
-	<button id="add">+</button>
-	<button id="remove">-</button>
 
-	<input type="checkbox" id='chaos' />
 
 	<script src="main.js"></script>
 </body>
